@@ -1,29 +1,35 @@
+using System.Collections;
+using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.AI;
-using System.Collections;
+using Debug = UnityEngine.Debug;
 
 public class EnemyAI : MonoBehaviour
 {
     public NavMeshAgent agent;
-    public Transform player;
+
+    public GameObject playerObj;
+    public float DetectRange = 10;
+    public float DetectAngle = 45;
     public LayerMask groundMask, playerMask;
     
     [Header("Patrolling")]
     public Vector3 walkpoint;
     bool walkPointSet;
     public float walkPointRange;
+    public float timer;
 
     [Header("Attacking")]
     public bool alreadyAttack;
 
-    [Header("States")]
+    public bool isInRange, isInAngle, isHideen;
     public float sightRange, attackRange;
     public bool playerInSight, playerInAttackRange;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
-        player = GameObject.Find("Player").transform;
+       
         agent = GetComponent<NavMeshAgent>();  
 
     }
@@ -31,23 +37,73 @@ public class EnemyAI : MonoBehaviour
     void Start()
     {
         if (!agent.isOnNavMesh)
-            Debug.Log("NOT ON NAVMESH");
+            UnityEngine.Debug.Log("NOT ON NAVMESH");
     }
 
     // Update is called once per frame
     void Update()
     {
-        playerInSight = Physics.CheckSphere(transform.position, sightRange, playerMask);
-        playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, playerMask);
-
+        isInRange = false;
+        isInAngle = false;
+        isHideen = false;
+       
         
+        timer += Time.deltaTime;
+        
+        //Check if player is in range of the AI
+        if(Vector3.Distance(transform.position, playerObj.transform.position)< DetectRange)
+        {
+            isInRange=true;
+            
+        }
+        else
+        {
+            
+            isInRange =false;
+            
+        }
 
-        if (!playerInSight && !playerInAttackRange)
+        //Check if Line of Sight of the player
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, (playerObj.transform.position - transform.position).normalized, out hit))
+        {
+            if(hit.transform == playerObj.transform)
+            {
+                isHideen =false;
+                
+            }
+            else
+            {
+                isHideen=true;
+                
+            }
+        }
+        else
+        {
+            isHideen = true;
+            
+        }
+
+        Vector3 side1 = playerObj.transform.position - transform.position;
+        Vector3 side2 = transform.forward;
+        float angle = Vector3.SignedAngle(side1, side2, Vector3.up);
+        if(angle< DetectRange && angle > -1 * DetectAngle)
+        {
+            isInAngle = true;
+           
+        }
+        else
+        {
+            isInAngle=false;
+           
+        }
+
+        if (!isHideen && !isInRange && !isInAngle && timer >= 3)
             Patrolling();
-        if(playerInSight && !playerInAttackRange)
-            ChasePlayer();
-        if(playerInSight && playerInAttackRange)
-            AttackPlayer();
+
+
+      
+       
     }
 
     private void Patrolling()
@@ -56,9 +112,14 @@ public class EnemyAI : MonoBehaviour
 
         if (!walkPointSet)
             SearchWalkPoint();
-
+        Debug.Log(walkPointSet);
         if (walkPointSet)
+        {
             agent.SetDestination(walkpoint);
+            
+            timer = 0;
+        }
+            
 
         Vector3 distanceToWalkPoint = transform.position - walkpoint;
 
@@ -82,21 +143,21 @@ public class EnemyAI : MonoBehaviour
         {
             walkpoint = hit.position;
             walkPointSet = true;
-            Debug.Log("New walkpoint set on NavMesh");
+            
         }
     }
 
     private void ChasePlayer()
     {
-        Debug.Log("Chase");
-        agent.SetDestination(player.position);
+        UnityEngine.Debug.Log("Chase");
+        agent.SetDestination(playerObj.transform.position);
     }
 
     private void AttackPlayer()
     {
-        Debug.Log("Attack");
+        UnityEngine.Debug.Log("Attack");
         agent.SetDestination((Vector3)transform.position);
-        transform.LookAt(player);
+        transform.LookAt(playerObj.transform.position);
     }   
     
     private void ResetAttack()

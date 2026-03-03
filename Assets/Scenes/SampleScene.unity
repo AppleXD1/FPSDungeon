@@ -260,7 +260,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 9.17, y: 3.15, z: -5.9726896}
-  m_LocalScale: {x: 1, y: 7.9341903, z: 1}
+  m_LocalScale: {x: 1, y: 7.9341903, z: 3.3922}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1740715398}
@@ -625,7 +625,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
   agent: {fileID: 303927148}
-  player: {fileID: 799484099}
+  playerObj: {fileID: 799484096}
+  DetectRange: 10
+  DetectAngle: 45
   groundMask:
     serializedVersion: 2
     m_Bits: 64
@@ -634,7 +636,11 @@ MonoBehaviour:
     m_Bits: 8
   walkpoint: {x: 0, y: 0, z: 0}
   walkPointRange: 3
+  timer: 0
   alreadyAttack: 0
+  isInRange: 0
+  isInAngle: 0
+  isHideen: 0
   sightRange: 0
   attackRange: 0
   playerInSight: 0
@@ -1062,7 +1068,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 11.48329, y: 3.15, z: 6.0373096}
-  m_LocalScale: {x: 1, y: 7.9341903, z: 1}
+  m_LocalScale: {x: 3.1576, y: 7.9341903, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1740715398}
@@ -1588,13 +1594,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1050377280}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: -0, y: -0.68269324, z: -0, w: 0.73070514}
   m_LocalPosition: {x: 3.76, y: 3.15, z: -10.12}
-  m_LocalScale: {x: 1, y: 7.9341903, z: 1}
+  m_LocalScale: {x: 1, y: 7.9341903, z: 4.1534}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1740715398}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -86.109, z: 0}
 --- !u!65 &1050377282
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2116,7 +2122,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 4.2147703, y: 3.15, z: -5.9726896}
-  m_LocalScale: {x: 1, y: 7.9341903, z: 1}
+  m_LocalScale: {x: 0.67023, y: 7.9341903, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1740715398}
@@ -2150,7 +2156,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 9.17, y: 3.15, z: -0.58}
-  m_LocalScale: {x: 1, y: 7.9341903, z: 1}
+  m_LocalScale: {x: 1, y: 7.9341903, z: 3.4872}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1740715398}
