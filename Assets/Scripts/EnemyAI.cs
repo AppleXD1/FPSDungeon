@@ -11,7 +11,6 @@ public class EnemyAI : MonoBehaviour
     public GameObject playerObj;
     public float DetectRange = 10;
     public float DetectAngle = 45;
-    public LayerMask groundMask, playerMask;
     
     [Header("Patrolling")]
     public Vector3 walkpoint;
@@ -46,12 +45,14 @@ public class EnemyAI : MonoBehaviour
         isInRange = false;
         isInAngle = false;
         isHideen = false;
-       
-        
+        //float distanceToTarget = Vector3.Distance(transform.position, playerObj.transform.position);
+
+
+
         timer += Time.deltaTime;
         
         //Check if player is in range of the AI
-        if(Vector3.Distance(transform.position, playerObj.transform.position)< DetectRange)
+        if(Vector3.Distance(transform.position, playerObj.transform.position) < DetectRange)
         {
             isInRange=true;
             
@@ -62,9 +63,9 @@ public class EnemyAI : MonoBehaviour
             isInRange =false;
             
         }
-
+        //Debug.DrawRay(transform.position, distanceToTarget, Color.red);
         //Check if Line of Sight of the player
-        RaycastHit hit;
+      /*  RaycastHit hit;
         if (Physics.Raycast(transform.position, (playerObj.transform.position - transform.position).normalized, out hit))
         {
             if(hit.transform == playerObj.transform)
@@ -83,7 +84,8 @@ public class EnemyAI : MonoBehaviour
             isHideen = true;
             
         }
-
+       */
+        //Check if the player is correct angle of vision
         Vector3 side1 = playerObj.transform.position - transform.position;
         Vector3 side2 = transform.forward;
         float angle = Vector3.SignedAngle(side1, side2, Vector3.up);
@@ -98,11 +100,14 @@ public class EnemyAI : MonoBehaviour
            
         }
 
-        if (!isHideen && !isInRange && !isInAngle && timer >= 3)
+        if (!isInRange && !isInAngle && timer >= 1.5)
             Patrolling();
+        
+        if(!isInRange && isInAngle)
+            ChasePlayer();
 
-
-      
+        if(isInRange &&  isInAngle)
+            AttackPlayer();
        
     }
 
@@ -132,11 +137,7 @@ public class EnemyAI : MonoBehaviour
         float randomZ = Random.Range(-walkPointRange, walkPointRange);
         float randomX = Random.Range(-walkPointRange, walkPointRange);
 
-        Vector3 randomPoint = new Vector3(
-            transform.position.x + randomX,
-            transform.position.y,
-            transform.position.z + randomZ
-        );
+        Vector3 randomPoint = new Vector3(transform.position.x + randomX, transform.position.y,transform.position.z + randomZ);
 
         NavMeshHit hit;
         if (NavMesh.SamplePosition(randomPoint, out hit, 2f, NavMesh.AllAreas))
