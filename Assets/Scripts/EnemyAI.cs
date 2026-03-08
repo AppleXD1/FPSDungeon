@@ -121,6 +121,7 @@ public class EnemyAI : MonoBehaviour
         Debug.Log("patrol");
         if (!walkPointSet)
             SearchWalkPoint();
+        
         Debug.Log(walkPointSet);
         if (walkPointSet)
         {
@@ -132,8 +133,10 @@ public class EnemyAI : MonoBehaviour
 
         Vector3 distanceToWalkPoint = transform.position - walkpoint;
 
-        if (distanceToWalkPoint.magnitude < 1f)
+        if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
+        {
             walkPointSet = false;
+        }
     }
 
     private void SearchWalkPoint()
@@ -141,14 +144,15 @@ public class EnemyAI : MonoBehaviour
         float randomZ = Random.Range(-walkPointRange, walkPointRange);
         float randomX = Random.Range(-walkPointRange, walkPointRange);
 
-        Vector3 randomPoint = new Vector3(transform.position.x + randomX, transform.position.y,transform.position.z + randomZ);
+        Vector3 randomPoint = new Vector3( transform.position.x + randomX, transform.position.y, transform.position.z + randomZ);
 
         NavMeshHit hit;
         if (NavMesh.SamplePosition(randomPoint, out hit, 2f, NavMesh.AllAreas))
         {
             walkpoint = hit.position;
             walkPointSet = true;
-            
+
+            agent.SetDestination(walkpoint);
         }
     }
 
