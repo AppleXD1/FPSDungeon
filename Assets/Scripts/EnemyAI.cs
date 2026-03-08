@@ -89,7 +89,7 @@ public class EnemyAI : MonoBehaviour
         Vector3 side1 = playerObj.transform.position - transform.position;
         Vector3 side2 = transform.forward;
         float angle = Vector3.SignedAngle(side1, side2, Vector3.up);
-        if(angle< DetectRange && angle > -1 * DetectAngle)
+        if (angle < DetectAngle && angle > -DetectAngle)
         {
             isInAngle = true;
            
@@ -100,21 +100,25 @@ public class EnemyAI : MonoBehaviour
            
         }
 
-        if (!isInRange && !isInAngle && timer >= 1.5)
-            Patrolling();
-        
-        if(!isInRange && isInAngle)
-            ChasePlayer();
-
-        if(isInRange &&  isInAngle)
+        if (isInRange && isInAngle)
+        {
             AttackPlayer();
-       
+        }
+        else if (!isInRange && isInAngle)
+        {
+            ChasePlayer();
+        }
+        else
+        {
+            Patrolling();
+        }
+
     }
 
     private void Patrolling()
     {
-       
 
+        Debug.Log("patrol");
         if (!walkPointSet)
             SearchWalkPoint();
         Debug.Log(walkPointSet);
@@ -150,7 +154,10 @@ public class EnemyAI : MonoBehaviour
 
     private void ChasePlayer()
     {
+        Debug.Log("chase");
         UnityEngine.Debug.Log("Chase");
+        agent.stoppingDistance = 1.5f;
+        agent.updateRotation = true;
         agent.SetDestination(playerObj.transform.position);
     }
 

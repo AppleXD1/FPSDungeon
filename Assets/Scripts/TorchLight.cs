@@ -30,6 +30,6 @@ public class TorchLight : MonoBehaviour
             torch.enabled = false;
             isDead = true;
         }
-        Debug.Log(percentage);
+       
     }
 }
