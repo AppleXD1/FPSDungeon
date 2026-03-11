@@ -63,32 +63,35 @@ public class EnemyAI : MonoBehaviour
             isInRange =false;
             
         }
-        //Debug.DrawRay(transform.position, distanceToTarget, Color.red);
-        //Check if Line of Sight of the player
-      /*  RaycastHit hit;
-        if (Physics.Raycast(transform.position, (playerObj.transform.position - transform.position).normalized, out hit))
+        Vector3 directionToPlayer = (playerObj.transform.position - transform.position).normalized;
+        float distanceToPlayer = Vector3.Distance(transform.position, playerObj.transform.position);
+
+        // Check range
+        isInRange = distanceToPlayer < DetectRange;
+
+        // Check angle
+        float angle = Vector3.Angle(transform.forward, directionToPlayer);
+        isInAngle = angle < DetectAngle;
+
+        // Check line of sight
+        RaycastHit hit;
+
+        if (Physics.Raycast(transform.position + Vector3.up * 0.5f, directionToPlayer, out hit, DetectRange))
         {
-            if(hit.transform == playerObj.transform)
+            if (hit.transform.gameObject == playerObj)
             {
-                isHideen =false;
-                
+                isHideen = false; // player visible
             }
             else
             {
-                isHideen=true;
-                
+                isHideen = true; // wall blocking
             }
         }
-        else
-        {
-            isHideen = true;
-            
-        }
-       */
         //Check if the player is correct angle of vision
         Vector3 side1 = playerObj.transform.position - transform.position;
         Vector3 side2 = transform.forward;
-        float angle = Vector3.SignedAngle(side1, side2, Vector3.up);
+       
+        float anglee = Vector3.SignedAngle(side1, side2, Vector3.up);
         if (angle < DetectAngle && angle > -DetectAngle)
         {
             isInAngle = true;
@@ -100,11 +103,11 @@ public class EnemyAI : MonoBehaviour
            
         }
 
-        if (isInRange && isInAngle)
+        if (isInRange && isInAngle && !isHideen)
         {
             AttackPlayer();
         }
-        else if (!isInRange && isInAngle)
+        else if (isInRange && !isHideen)
         {
             ChasePlayer();
         }
