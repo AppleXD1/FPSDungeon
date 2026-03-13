@@ -6159,7 +6159,7 @@ GameObject:
   m_Component:
   - component: {fileID: 303927149}
   - component: {fileID: 303927148}
-  - component: {fileID: 303927147}
+  - component: {fileID: 303927150}
   - component: {fileID: 303927146}
   m_Layer: 0
   m_Name: EnemyRoot
@@ -6191,33 +6191,6 @@ CapsuleCollider:
   m_Height: 1.9563268
   m_Direction: 1
   m_Center: {x: -0.06508207, y: 0.8870166, z: -0.042469025}
---- !u!114 &303927147
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 303927145}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b40dfa687e75fd44af3154554df3ce6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
-  agent: {fileID: 303927148}
-  playerObj: {fileID: 799484096}
-  DetectRange: 3
-  DetectAngle: 45
-  walkpoint: {x: 0, y: 0, z: 0}
-  walkPointRange: 3
-  timer: 0
-  alreadyAttack: 0
-  isInRange: 0
-  isInAngle: 0
-  isHideen: 0
-  sightRange: 0
-  attackRange: 0
-  playerInSight: 0
-  playerInAttackRange: 0
 --- !u!195 &303927148
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -6256,6 +6229,36 @@ Transform:
   - {fileID: 222008068}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &303927150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 303927145}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ddac39174f85684ba1ee411fd54a5ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyAI2
+  agent: {fileID: 303927148}
+  playerObj: {fileID: 799484096}
+  playerPreviousPosition: {x: 0, y: 0, z: 0}
+  AttackRange: 10
+  viewDistance: 15
+  viewAngle: 35
+  rayCount: 20
+  playerSeen: 0
+  isAttack: 0
+  isCalm: 0
+  isChasing: 0
+  isSeaching: 0
+  walkPointRange: 0
+  walkpoint: {x: 0, y: 0, z: 0}
+  timer: 0
+  detectionLayer:
+    serializedVersion: 2
+    m_Bits: 9
 --- !u!1001 &304111218
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14951,7 +14954,7 @@ Transform:
   m_GameObject: {fileID: 799484096}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.70710677, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -27.9, y: 0, z: -1.35}
+  m_LocalPosition: {x: 19.75, y: 0, z: -3.05}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -15014,7 +15017,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 80
+  m_Constraints: 116
   m_CollisionDetection: 0
 --- !u!1001 &802929014
 PrefabInstance:
@@ -35280,7 +35283,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 91b94483956e4a249b301c2c7055b505, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.01
+      value: 0.1000038
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 91b94483956e4a249b301c2c7055b505, type: 3}
       propertyPath: m_LocalPosition.z

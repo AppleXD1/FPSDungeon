@@ -45,71 +45,40 @@ public class EnemyAI : MonoBehaviour
         isInRange = false;
         isInAngle = false;
         isHideen = false;
-        //float distanceToTarget = Vector3.Distance(transform.position, playerObj.transform.position);
-
-
-
-        timer += Time.deltaTime;
         
-        //Check if player is in range of the AI
-        if(Vector3.Distance(transform.position, playerObj.transform.position) < DetectRange)
-        {
-            isInRange=true;
-            
-        }
-        else
-        {
-            
-            isInRange =false;
-            
-        }
-        Vector3 directionToPlayer = (playerObj.transform.position - transform.position).normalized;
-        float distanceToPlayer = Vector3.Distance(transform.position, playerObj.transform.position);
+        Vector3 enemyEye = transform.position + Vector3.up * 1.0f;
+        Vector3 playerTarget = playerObj.transform.position + Vector3.up * 1.0f;
 
-        // Check range
-        isInRange = distanceToPlayer < DetectRange;
+        Vector3 directionToPlayer = (playerTarget - enemyEye).normalized;
+        float distanceToPlayer = Vector3.Distance(enemyEye, playerTarget);
 
-        // Check angle
+        // Range check
+        isInRange = distanceToPlayer <= DetectRange;
+
+        // Angle check
         float angle = Vector3.Angle(transform.forward, directionToPlayer);
-        isInAngle = angle < DetectAngle;
+        isInAngle = angle <= DetectAngle;
 
-        // Check line of sight
+        // Line of sight check
         RaycastHit hit;
+        if (Physics.Raycast(enemyEye, directionToPlayer, out hit, DetectRange))
+        {
+            Debug.DrawRay(enemyEye, directionToPlayer * DetectRange, Color.red);
 
-        if (Physics.Raycast(transform.position + Vector3.up * 0.5f, directionToPlayer, out hit, DetectRange))
-        {
-            if (hit.transform.gameObject == playerObj)
-            {
-                isHideen = false; // player visible
-            }
-            else
-            {
-                isHideen = true; // wall blocking
-            }
-        }
-        //Check if the player is correct angle of vision
-        Vector3 side1 = playerObj.transform.position - transform.position;
-        Vector3 side2 = transform.forward;
-       
-        float anglee = Vector3.SignedAngle(side1, side2, Vector3.up);
-        if (angle < DetectAngle && angle > -DetectAngle)
-        {
-            isInAngle = true;
-           
+            isHideen = hit.transform.root.gameObject != playerObj;
         }
         else
         {
-            isInAngle=false;
-           
+            isHideen = true;
         }
 
+        // State logic
         if (isInRange && isInAngle && !isHideen)
         {
-            AttackPlayer();
-        }
-        else if (isInRange && !isHideen)
-        {
-            ChasePlayer();
+            if (distanceToPlayer <= attackRange)
+                AttackPlayer();
+            else
+                ChasePlayer();
         }
         else
         {
@@ -125,14 +94,13 @@ public class EnemyAI : MonoBehaviour
         if (!walkPointSet)
             SearchWalkPoint();
         
-        Debug.Log(walkPointSet);
-        if (walkPointSet)
+       
+        if (!agent.pathPending && walkPointSet && agent.remainingDistance <= agent.stoppingDistance + 0.2f && timer >= 2f)
         {
-            agent.SetDestination(walkpoint);
-            
+            walkPointSet = false;
             timer = 0;
         }
-            
+
 
         Vector3 distanceToWalkPoint = transform.position - walkpoint;
 
