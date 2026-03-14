@@ -11,7 +11,7 @@ public class EnemyAI2 : MonoBehaviour
     public GameObject playerObj;
     public Vector3 playerPreviousPosition;
     public float AttackRange = 10;
-    
+
     [Header("VisionCheck")]
     public float viewDistance = 10f;
     public float viewAngle = 90f;
@@ -43,6 +43,8 @@ public class EnemyAI2 : MonoBehaviour
         if (agent == null)
             agent = GetComponent<NavMeshAgent>();
 
+        agent.isStopped = false;
+
         if (!agent.isOnNavMesh)
             Debug.LogError("Enemy is not placed on NavMesh!");
     }
@@ -51,31 +53,56 @@ public class EnemyAI2 : MonoBehaviour
     void Update()
     {
         VisionCheck();
-        timer += Time.deltaTime;
-        if (playerSeen)
+
+        Vector3 enemyLocation = transform.position;
+        Vector3 playerTarget = playerObj.transform.position;
+
+        float distanceToPlayer = Vector3.Distance(enemyLocation, playerTarget);
+
+        Debug.Log(distanceToPlayer);
+        
+        if(distanceToPlayer <= AttackRange && playerSeen)
+        {
+            isChasing = false;
+            isAttack = true;
+        }
+        else if (distanceToPlayer >= AttackRange && playerSeen)
+        {
+            isAttack = false;
+            isChasing = true;
+        }
+        else if(distanceToPlayer >= AttackRange && !playerSeen)
+        {
+            isCalm = true;
+            isAttack = false;
+            isChasing=false;
+        }
+
+
+
+
+            timer += Time.deltaTime;
+        if (playerSeen && !isAttack)
         {
             isCalm = false;
             isChasing = true;
         }
-        else if (!playerSeen && isChasing)
-        {
-            agent.SetDestination(playerPreviousPosition);
-        }
+
         if (isCalm && !isChasing && !isAttack)
         {
             CalmWalking();
         }
-        if(!isCalm && isChasing && !isAttack)
+        if (!isCalm && isChasing && !isAttack)
         {
             Chasing();
         }
-        if(!isCalm && !isChasing && isAttack)
+        if (!isCalm && !isChasing && isAttack)
         {
             Attacking();
         }
 
 
-        
+
     }
 
     void VisionCheck() //Line of Sight
@@ -97,17 +124,12 @@ public class EnemyAI2 : MonoBehaviour
             {
                 Debug.DrawRay(transform.position, direction * hit.distance, Color.red);
 
-                if (hit.collider.CompareTag("Player") && isCalm)
+                if (hit.collider.CompareTag("Player"))
                 {
                     playerDetectedThisFrame = true;
                     Debug.Log("Player Detected!");
                     playerPreviousPosition = playerObj.transform.position;
-                    Debug.Log(playerDetectedThisFrame);
-                  
-                }
-                if (!hit.collider.CompareTag("Player"))
-                {
-                    playerDetectedThisFrame = false;
+
 
                 }
 
@@ -119,27 +141,22 @@ public class EnemyAI2 : MonoBehaviour
             }
         }
         playerSeen = playerDetectedThisFrame;
-       
+        
+
 
     }
 
     void Attacking()
     {
-        Vector3 enemyLocation = transform.position;
-        Vector3 playerTarget = playerObj.transform.position;
-
-        float distanceToPlayer = Vector3.Distance(enemyLocation, playerTarget);
-        if(distanceToPlayer < AttackRange)
-        {
-            Debug.Log("In range");
-        }
+          
+        
         Debug.Log("Attack");
     }
 
     void Chasing()
     {
-        
-        if(playerSeen)
+
+        if (playerSeen)
         {
             agent.SetDestination(playerObj.transform.position);
         }
@@ -151,7 +168,7 @@ public class EnemyAI2 : MonoBehaviour
 
         if (!agent.pathPending && agent.remainingDistance < 0.5)
         {
-            playerSeen = false;
+
             isCalm = true;
             isChasing = false;
             isSeaching = false;
@@ -166,7 +183,7 @@ public class EnemyAI2 : MonoBehaviour
         if (!walkPointSet)
             SearchWalkPoint();
 
-       
+
         if (!agent.pathPending && walkPointSet && agent.remainingDistance <= agent.stoppingDistance + 0.2f && timer >= 3f)
         {
             walkPointSet = false;
@@ -184,20 +201,24 @@ public class EnemyAI2 : MonoBehaviour
 
     private void SearchWalkPoint()
     {
-        float randomZ = Random.Range(-walkPointRange, walkPointRange);
-        float randomX = Random.Range(-walkPointRange, walkPointRange);
-
-        Vector3 randomPoint = new Vector3(transform.position.x + randomX, transform.position.y, transform.position.z + randomZ);
-
-        NavMeshHit hit;
-        if (NavMesh.SamplePosition(randomPoint, out hit, 10f, NavMesh.AllAreas))
+        for (int i = 0; i < 20; i++)
         {
-            walkpoint = hit.position;
-            walkPointSet = true;
+            Vector3 randomDirection = Random.insideUnitSphere * walkPointRange;
+            randomDirection += transform.position;
+            randomDirection.y = transform.position.y;
 
-            agent.SetDestination(walkpoint);
+            NavMeshHit hit;
+            if (NavMesh.SamplePosition(randomDirection, out hit, walkPointRange, NavMesh.AllAreas))
+            {
+                if (Vector3.Distance(transform.position, hit.position) > 2f)
+                {
+                    walkpoint = hit.position;
+                    walkPointSet = true;
+                    agent.SetDestination(walkpoint);
+                    return;
+                }
+            }
         }
-    }
 
-    
+    }
 }
