@@ -59,7 +59,7 @@ public class EnemyAI2 : MonoBehaviour
 
         float distanceToPlayer = Vector3.Distance(enemyLocation, playerTarget);
 
-        Debug.Log(distanceToPlayer);
+        
         
         if(distanceToPlayer <= AttackRange && playerSeen)
         {
