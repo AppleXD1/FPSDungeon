@@ -11,7 +11,7 @@ public class FPSBody : MonoBehaviour
     public GameObject equip;
     public bool gotKey;
     public GameObject equippedSword;
-    private bool isAttacking;
+    public bool isAttacking;
 
     public Animator animator;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -67,7 +67,7 @@ public class FPSBody : MonoBehaviour
         equippedSword = sword;
 
         sword.transform.SetParent(equip.transform);
-        sword.transform.localPosition = Vector3.zero;
+        sword.transform.localPosition = equip.transform.localPosition;
         sword.transform.localRotation = Quaternion.identity;
 
         Rigidbody rb = sword.GetComponent<Rigidbody>();
@@ -99,5 +99,7 @@ public class FPSBody : MonoBehaviour
 
         isAttacking = false;
     }
+
+    
 
 }

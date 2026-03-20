@@ -11,6 +11,7 @@ public class EnemyAI2 : MonoBehaviour
     public GameObject playerObj;
     public Vector3 playerPreviousPosition;
     public float AttackRange = 10;
+    
 
     [Header("VisionCheck")]
     public float viewDistance = 10f;
@@ -30,15 +31,24 @@ public class EnemyAI2 : MonoBehaviour
     bool walkPointSet;
     public float timer;
 
+    [Header("Other Scripts/Health")]
+    public bool isStunned;
+    public float stunTimmer;
+    public Swords swords;
+    public FPSBody body;
+
     public LayerMask detectionLayer;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        swords = GameObject.FindWithTag("Sword").GetComponent<Swords>();
+        body = GameObject.FindWithTag("Player").GetComponent<FPSBody>();
         isCalm = true;
         isChasing = false;
         isAttack = false;
         isSeaching = false;
+        stunTimmer = 3f;
 
         if (agent == null)
             agent = GetComponent<NavMeshAgent>();
@@ -52,6 +62,7 @@ public class EnemyAI2 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         VisionCheck();
 
         Vector3 enemyLocation = transform.position;
@@ -59,9 +70,9 @@ public class EnemyAI2 : MonoBehaviour
 
         float distanceToPlayer = Vector3.Distance(enemyLocation, playerTarget);
 
-        
-        
-        if(distanceToPlayer <= AttackRange && playerSeen)
+
+
+        if (distanceToPlayer <= AttackRange && playerSeen)
         {
             isChasing = false;
             isAttack = true;
@@ -71,17 +82,17 @@ public class EnemyAI2 : MonoBehaviour
             isAttack = false;
             isChasing = true;
         }
-        else if(distanceToPlayer >= AttackRange && !playerSeen)
+        else if (distanceToPlayer >= AttackRange && !playerSeen)
         {
             isCalm = true;
             isAttack = false;
-            isChasing=false;
+            isChasing = false;
         }
 
 
 
 
-            timer += Time.deltaTime;
+        timer += Time.deltaTime;
         if (playerSeen && !isAttack)
         {
             isCalm = false;
@@ -100,6 +111,11 @@ public class EnemyAI2 : MonoBehaviour
         {
             Attacking();
         }
+        if(isStunned)
+        {
+            Stunned();
+        }
+
 
 
 
@@ -148,8 +164,6 @@ public class EnemyAI2 : MonoBehaviour
 
     void Attacking()
     {
-          
-        
         Debug.Log("Attack");
     }
 
@@ -220,5 +234,29 @@ public class EnemyAI2 : MonoBehaviour
             }
         }
 
+    }
+
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.CompareTag("Sword"))
+        {
+            Debug.Log("sword hit");
+            if(body.isAttacking == true)
+            {
+                isStunned = true;
+            }
+        }
+    }
+
+    void Stunned()
+    {
+        agent.enabled = false;
+        stunTimmer -= Time.deltaTime;
+        if(stunTimmer < 0)
+        {
+            agent.enabled = true;
+            stunTimmer = 3;
+        }
     }
 }
