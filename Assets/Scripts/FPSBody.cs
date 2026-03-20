@@ -67,25 +67,27 @@ public class FPSBody : MonoBehaviour
         equippedSword = sword;
 
         sword.transform.SetParent(equip.transform);
-        sword.transform.localPosition = equip.transform.localPosition;
+        sword.transform.localPosition = Vector3.zero;
         sword.transform.localRotation = Quaternion.identity;
 
         Rigidbody rb = sword.GetComponent<Rigidbody>();
         if (rb != null)
         {
-            rb.isKinematic = true;
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
+            rb.useGravity = false;
+            rb.isKinematic = true;
         }
 
         Collider[] cols = sword.GetComponentsInChildren<Collider>();
         foreach (Collider c in cols)
         {
-            c.enabled = false;
+            if (!c.isTrigger)
+                c.enabled = false;
         }
     }
 
-  
+
 
     IEnumerator SwingAttack()
     {

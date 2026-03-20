@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4340477115772328852}
   - component: {fileID: 11812218779747153}
   - component: {fileID: 6864700059850190546}
+  - component: {fileID: 3317115574919205274}
   m_Layer: 0
   m_Name: EnemyRoot
   m_TagString: Untagged
@@ -84,6 +85,10 @@ MonoBehaviour:
   walkPointRange: 5
   walkpoint: {x: 0, y: 0, z: 0}
   timer: 0
+  isStunned: 0
+  stunTimmer: 0
+  swords: {fileID: 0}
+  body: {fileID: 0}
   detectionLayer:
     serializedVersion: 2
     m_Bits: 9
@@ -110,6 +115,33 @@ CapsuleCollider:
   m_Height: 1.9563268
   m_Direction: 1
   m_Center: {x: -0.06508207, y: 0.8870166, z: -0.042469025}
+--- !u!54 &3317115574919205274
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 416079280998086452}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 36
+  m_CollisionDetection: 0
 --- !u!1 &2532840125241409874
 GameObject:
   m_ObjectHideFlags: 0

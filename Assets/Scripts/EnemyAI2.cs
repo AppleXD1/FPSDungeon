@@ -40,10 +40,40 @@ public class EnemyAI2 : MonoBehaviour
     public LayerMask detectionLayer;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+
+    void Awake()
+    {
+        GameObject player = GameObject.FindWithTag("Player");
+
+        if (player != null)
+        {
+            Debug.Log("Found player: " + player.name);
+
+            body = player.GetComponent<FPSBody>();
+
+            if (body != null)
+                Debug.Log("Found FPSBody on player");
+            else
+                Debug.Log("FPSBody NOT found on player");
+        }
+        else
+        {
+            Debug.Log("Player tag not found");
+        }
+        playerObj = GameObject.FindWithTag("Player");
+
+        if (swords == null)
+        {
+            GameObject swordObj = GameObject.FindWithTag("Sword");
+            if (swordObj != null)
+                swords = swordObj.GetComponent<Swords>();
+        }
+    }
+
     void Start()
     {
-        swords = GameObject.FindWithTag("Sword").GetComponent<Swords>();
-        body = GameObject.FindWithTag("Player").GetComponent<FPSBody>();
+        
         isCalm = true;
         isChasing = false;
         isAttack = false;
@@ -143,7 +173,7 @@ public class EnemyAI2 : MonoBehaviour
                 if (hit.collider.CompareTag("Player"))
                 {
                     playerDetectedThisFrame = true;
-                    Debug.Log("Player Detected!");
+                  
                     playerPreviousPosition = playerObj.transform.position;
 
 
@@ -164,7 +194,7 @@ public class EnemyAI2 : MonoBehaviour
 
     void Attacking()
     {
-        Debug.Log("Attack");
+       // Debug.Log("Attack");
     }
 
     void Chasing()
@@ -239,24 +269,27 @@ public class EnemyAI2 : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.CompareTag("Sword"))
+        if (other.CompareTag("Sword"))
         {
             Debug.Log("sword hit");
-            if(body.isAttacking == true)
+
+            if (body != null && body.isAttacking)
             {
                 isStunned = true;
+                Debug.Log("AI stunned");
             }
         }
     }
-
     void Stunned()
     {
         agent.enabled = false;
         stunTimmer -= Time.deltaTime;
-        if(stunTimmer < 0)
+
+        if (stunTimmer <= 0f)
         {
             agent.enabled = true;
-            stunTimmer = 3;
+            isStunned = false;
+            stunTimmer = 3f;
         }
     }
 }

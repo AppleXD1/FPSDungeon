@@ -8477,6 +8477,38 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.5000002, y: 4.0000005, z: 2.500062}
   m_Center: {x: 0.75000036, y: 2.0000002, z: 0.7500322}
+--- !u!1 &440390428 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 416079280998086452, guid: 104f6c791bae7cf4da1b46d284146370, type: 3}
+  m_PrefabInstance: {fileID: 799325614}
+  m_PrefabAsset: {fileID: 0}
+--- !u!54 &440390433
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 440390428}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 36
+  m_CollisionDetection: 0
 --- !u!1 &441092128 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 91b94483956e4a249b301c2c7055b505, type: 3}
@@ -14996,6 +15028,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 11812218779747153, guid: 104f6c791bae7cf4da1b46d284146370, type: 3}
+      propertyPath: body
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 11812218779747153, guid: 104f6c791bae7cf4da1b46d284146370, type: 3}
       propertyPath: playerObj
       value: 
       objectReference: {fileID: 799484096}
@@ -15013,7 +15049,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5498247509197260047, guid: 104f6c791bae7cf4da1b46d284146370, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4.78
+      value: -0.9
       objectReference: {fileID: 0}
     - target: {fileID: 5498247509197260047, guid: 104f6c791bae7cf4da1b46d284146370, type: 3}
       propertyPath: m_LocalPosition.z
@@ -15047,10 +15083,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6864700059850190546, guid: 104f6c791bae7cf4da1b46d284146370, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 416079280998086452, guid: 104f6c791bae7cf4da1b46d284146370, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 440390433}
   m_SourcePrefab: {fileID: 100100000, guid: 104f6c791bae7cf4da1b46d284146370, type: 3}
 --- !u!1 &799484096 stripped
 GameObject:
@@ -15068,6 +15111,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.PlayerInput
+--- !u!114 &799484101 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4754002756574948478, guid: 55a22e798a342f147b85054d4706d656, type: 3}
+  m_PrefabInstance: {fileID: 6298418935312811600}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 799484096}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce5ecd630bc2f8347a824ddaea7dd8cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FPSBody
 --- !u!1001 &802929014
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -23040,6 +23094,7 @@ GameObject:
   - component: {fileID: 1186588636}
   - component: {fileID: 1186588635}
   - component: {fileID: 1186588637}
+  - component: {fileID: 1186588638}
   m_Layer: 0
   m_Name: DamageSword
   m_TagString: Sword
@@ -23098,6 +23153,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Swords
   Damage: 5
   Durability: 3
+--- !u!54 &1186588638
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1186588634}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1187826125 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 91b94483956e4a249b301c2c7055b505, type: 3}
@@ -45257,6 +45339,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1003638936335287649, guid: 55a22e798a342f147b85054d4706d656, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 1891391084882014976, guid: 55a22e798a342f147b85054d4706d656, type: 3}
       propertyPath: moveSpeed
       value: 0.75
@@ -45300,6 +45386,10 @@ PrefabInstance:
     - target: {fileID: 2282731195249766094, guid: 55a22e798a342f147b85054d4706d656, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2440960053701667125, guid: 55a22e798a342f147b85054d4706d656, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 2752922861046633733, guid: 55a22e798a342f147b85054d4706d656, type: 3}
       propertyPath: m_LocalPosition.x
@@ -45373,6 +45463,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 11812218779747153, guid: 104f6c791bae7cf4da1b46d284146370, type: 3}
+      propertyPath: body
+      value: 
+      objectReference: {fileID: 799484101}
     - target: {fileID: 11812218779747153, guid: 104f6c791bae7cf4da1b46d284146370, type: 3}
       propertyPath: playerObj
       value: 
