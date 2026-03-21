@@ -193,7 +193,7 @@ public class EnemyAI2 : MonoBehaviour
             agent.isStopped = true;
             animator.SetBool("isAttacking", true);
             hasDealtDamage = false;
-            StartCoroutine(DamagePlayer(0.6f)); // adjust timing to match punch impact
+            StartCoroutine(DamagePlayer(0.5f)); 
         }
     }
 

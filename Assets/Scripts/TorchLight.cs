@@ -5,8 +5,8 @@ public class TorchLight : MonoBehaviour
     public Light torch;
     public float maxRange = 10f;
     public float maxburnTimer = 60f;
-    private float timer;
-    private bool isDead = false;
+    public float timer;
+    public bool isDead = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -16,6 +16,7 @@ public class TorchLight : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         timer -= Time.deltaTime;
         float percentage = Mathf.Clamp01(timer/maxburnTimer);
         
@@ -32,4 +33,6 @@ public class TorchLight : MonoBehaviour
         }
        
     }
+
+
 }

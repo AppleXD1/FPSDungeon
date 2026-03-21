@@ -8,6 +8,9 @@ TagManager:
   - Door
   - Sword
   - HitBox
+  - Torch
+  - StationLight
+  - Enemy
   layers:
   - Default
   - TransparentFX

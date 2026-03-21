@@ -14,12 +14,14 @@ public class FPSBody : MonoBehaviour
     public bool isAttacking;
 
     public Animator animator;
+    public TorchLight TorchLight;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         if (equip != null)
             animator = equip.GetComponent<Animator>();
         playerInput = GetComponent<PlayerInput>();
+        TorchLight = GameObject.FindWithTag("Torch").GetComponent<TorchLight>();
         LeftClick = playerInput.actions.FindAction("Attack");
         MaxHealth = 10;
         Health = MaxHealth;
@@ -98,6 +100,12 @@ public class FPSBody : MonoBehaviour
         isAttacking = false;
     }
 
-    
+    void GameOver()
+    {
+        if(Health <= 0 || TorchLight.isDead)
+        {
+
+        }
+    }
 
 }
