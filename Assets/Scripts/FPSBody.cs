@@ -6,8 +6,8 @@ public class FPSBody : MonoBehaviour
 {
     public PlayerInput playerInput;
     private InputAction LeftClick;
-    public float Health;
-    public float MaxHealth;
+    public float Health = 10;
+    public float MaxHealth = 10;
     public GameObject equip;
     public bool gotKey;
     public GameObject equippedSword;
@@ -23,8 +23,6 @@ public class FPSBody : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         TorchLight = GameObject.FindWithTag("Torch").GetComponent<TorchLight>();
         LeftClick = playerInput.actions.FindAction("Attack");
-        MaxHealth = 10;
-        Health = MaxHealth;
     }
 
     // Update is called once per frame
