@@ -136,6 +136,7 @@ public class EnemyAI2 : MonoBehaviour
         }
         if (isStunned)
         {
+            animator.SetBool("IsStunned", true);
             Stunned();
         }
 
@@ -171,8 +172,6 @@ public class EnemyAI2 : MonoBehaviour
 
 
                 }
-
-
             }
             else
             {
@@ -272,12 +271,11 @@ public class EnemyAI2 : MonoBehaviour
     {
         if (other.CompareTag("Sword"))
         {
-            Debug.Log("sword hit");
-
-            if (body != null && body.isAttacking)
+            if (body != null && body.isAttacking && !isStunned)
             {
                 isStunned = true;
                 swords.Durability--;
+                
             }
         }
     }
@@ -291,6 +289,7 @@ public class EnemyAI2 : MonoBehaviour
             agent.enabled = true;
             isStunned = false;
             stunTimmer = 3f;
+            animator.SetBool("IsStunned", false);
         }
     }
 

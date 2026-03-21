@@ -92,13 +92,9 @@ public class FPSBody : MonoBehaviour
     IEnumerator SwingAttack()
     {
         isAttacking = true;
-
         animator.SetBool("isSwing", true);
-
         yield return new WaitForSeconds(0.5f);
-
         animator.SetBool("isSwing", false);
-
         isAttacking = false;
     }
 
