@@ -11,7 +11,8 @@ public class EnemyAI2 : MonoBehaviour
     public GameObject playerObj;
     public Vector3 playerPreviousPosition;
     public float AttackRange = 10;
-    
+    public bool hasDealtDamage;
+
 
     [Header("VisionCheck")]
     public float viewDistance = 10f;
@@ -31,11 +32,13 @@ public class EnemyAI2 : MonoBehaviour
     bool walkPointSet;
     public float timer;
 
-    [Header("Other Scripts/Health")]
+    [Header("Other Scripts/other stuff")]
     public bool isStunned;
     public float stunTimmer;
     public Swords swords;
     public FPSBody body;
+    public HitPlayer hitBox;
+    public Animator animator;
 
     public LayerMask detectionLayer;
 
@@ -45,35 +48,17 @@ public class EnemyAI2 : MonoBehaviour
     void Awake()
     {
         GameObject player = GameObject.FindWithTag("Player");
-
-        if (player != null)
-        {
-            Debug.Log("Found player: " + player.name);
-
-            body = player.GetComponent<FPSBody>();
-
-            if (body != null)
-                Debug.Log("Found FPSBody on player");
-            else
-                Debug.Log("FPSBody NOT found on player");
-        }
-        else
-        {
-            Debug.Log("Player tag not found");
-        }
+        body = player.GetComponent<FPSBody>();
         playerObj = GameObject.FindWithTag("Player");
+        GameObject swordObj = GameObject.FindWithTag("Sword");
+        swords = swordObj.GetComponent<Swords>();
+        hitBox = GameObject.FindWithTag("HitBox").GetComponent<HitPlayer>();
 
-        if (swords == null)
-        {
-            GameObject swordObj = GameObject.FindWithTag("Sword");
-            if (swordObj != null)
-                swords = swordObj.GetComponent<Swords>();
-        }
     }
 
     void Start()
     {
-        
+
         isCalm = true;
         isChasing = false;
         isAttack = false;
@@ -100,6 +85,14 @@ public class EnemyAI2 : MonoBehaviour
 
         float distanceToPlayer = Vector3.Distance(enemyLocation, playerTarget);
 
+        if (agent.velocity.sqrMagnitude > 0.1f)
+        {
+            animator.SetBool("IsWalking", true);
+        }
+        else
+        {
+            animator.SetBool("IsWalking", false);
+        }
 
 
         if (distanceToPlayer <= AttackRange && playerSeen)
@@ -141,7 +134,7 @@ public class EnemyAI2 : MonoBehaviour
         {
             Attacking();
         }
-        if(isStunned)
+        if (isStunned)
         {
             Stunned();
         }
@@ -173,7 +166,7 @@ public class EnemyAI2 : MonoBehaviour
                 if (hit.collider.CompareTag("Player"))
                 {
                     playerDetectedThisFrame = true;
-                  
+
                     playerPreviousPosition = playerObj.transform.position;
 
 
@@ -187,14 +180,22 @@ public class EnemyAI2 : MonoBehaviour
             }
         }
         playerSeen = playerDetectedThisFrame;
-        
+
 
 
     }
 
     void Attacking()
     {
-       // Debug.Log("Attack");
+        // Debug.Log("Attack");
+
+        if (!animator.GetBool("isAttacking"))
+        {
+            agent.isStopped = true;
+            animator.SetBool("isAttacking", true);
+            hasDealtDamage = false;
+            StartCoroutine(DamagePlayer(0.6f)); // adjust timing to match punch impact
+        }
     }
 
     void Chasing()
@@ -221,9 +222,9 @@ public class EnemyAI2 : MonoBehaviour
     }
 
 
-    void CalmWalking() //Calm
+    void CalmWalking()
     {
-        
+
         if (!walkPointSet)
             SearchWalkPoint();
 
@@ -276,7 +277,7 @@ public class EnemyAI2 : MonoBehaviour
             if (body != null && body.isAttacking)
             {
                 isStunned = true;
-                Debug.Log("AI stunned");
+                swords.Durability--;
             }
         }
     }
@@ -292,4 +293,24 @@ public class EnemyAI2 : MonoBehaviour
             stunTimmer = 3f;
         }
     }
+
+
+    IEnumerator DamagePlayer(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        
+
+        if (stateInfo.IsName("Punch") && hitBox.hitPlayer && !hasDealtDamage)
+        {
+            Debug.Log("hit");
+            hasDealtDamage = true;
+            hitBox.hitPlayer = false;
+            body.Health--;
+        }
+
+        animator.SetBool("isAttacking", false);
+        agent.isStopped = false;
+    }
+
 }

@@ -7,6 +7,7 @@ TagManager:
   - Key
   - Door
   - Sword
+  - HitBox
   layers:
   - Default
   - TransparentFX
