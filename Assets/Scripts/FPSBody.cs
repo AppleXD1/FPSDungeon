@@ -10,6 +10,7 @@ public class FPSBody : MonoBehaviour
     public float MaxHealth = 10;
     public GameObject equip;
     public bool gotKey;
+    public bool lvlComplete;
     public GameObject equippedSword;
     public bool isAttacking;
 
@@ -23,6 +24,7 @@ public class FPSBody : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         TorchLight = GameObject.FindWithTag("Torch").GetComponent<TorchLight>();
         LeftClick = playerInput.actions.FindAction("Attack");
+        lvlComplete = false;
     }
 
     // Update is called once per frame
@@ -45,6 +47,7 @@ public class FPSBody : MonoBehaviour
         if (other.gameObject.CompareTag("Door") && gotKey)
         {
             Debug.Log("level complete");
+            lvlComplete=true;
         }
 
         if(other.gameObject.CompareTag("Sword"))
@@ -98,12 +101,6 @@ public class FPSBody : MonoBehaviour
         isAttacking = false;
     }
 
-    void GameOver()
-    {
-        if(Health <= 0 || TorchLight.isDead)
-        {
-
-        }
-    }
+    
 
 }
