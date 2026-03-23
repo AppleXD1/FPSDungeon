@@ -11,6 +11,8 @@ TagManager:
   - Torch
   - StationLight
   - Enemy
+  - LV1
+  - LV2
   layers:
   - Default
   - TransparentFX

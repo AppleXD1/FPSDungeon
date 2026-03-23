@@ -4,6 +4,7 @@ public class FPSCam : MonoBehaviour
 {
     public float sensitivity = 2f;
     private float xRotation = 0f;
+    public bool camLock;
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -12,6 +13,11 @@ public class FPSCam : MonoBehaviour
 
     void Update()
     {
+        while (camLock)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
         float mouseX = Input.GetAxis("Mouse X") * sensitivity;
         float mouseY = Input.GetAxis("Mouse Y") * sensitivity;
 
