@@ -142,16 +142,19 @@ public class EnemyAI2 : MonoBehaviour
             Stunned();
         }
 
+       
         if(isAttack)
         {
             agent.isStopped = true;
-            RotateToPlayer(12f);
+            Vector3 direction = playerObj.transform.position - transform.position;
+            direction.y = 0f;
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 12f * Time.deltaTime);
         }
         else
         {
             agent.isStopped = false;
         }
-
 
     }
 
@@ -160,7 +163,7 @@ public class EnemyAI2 : MonoBehaviour
         bool playerDetectedThisFrame = false;
         float startAngle = -viewAngle / 2;
         float angleStep = viewAngle / rayCount;
-
+        //Create a fan like rays
         for (int i = 0; i <= rayCount; i++)
         {
             float angle = startAngle + angleStep * i;
@@ -207,7 +210,7 @@ public class EnemyAI2 : MonoBehaviour
         }
     }
 
-    void Chasing()
+    void Chasing() //Chase the Player or Chase the last know player spot
     {
 
         if (playerSeen)
@@ -276,17 +279,7 @@ public class EnemyAI2 : MonoBehaviour
 
     }
 
-    void RotateToPlayer(float rotateSpeed)
-    {
-        Vector3 direction = playerObj.transform.position - transform.position;
-        direction.y = 0f;
-
-        if (direction.sqrMagnitude < 0.001f) return;
-
-        Quaternion targetRotation = Quaternion.LookRotation(direction);
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
-    }
-
+    
 
     private void OnTriggerEnter(Collider other)
     {
