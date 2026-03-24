@@ -65,9 +65,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce5ecd630bc2f8347a824ddaea7dd8cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FPSBody
+  playerInput: {fileID: 0}
   Health: 0
   MaxHealth: 0
+  equip: {fileID: 0}
   gotKey: 0
+  lvlComplete: 0
+  isEquiped: 0
+  equippedSword: {fileID: 0}
+  isAttacking: 0
+  animator: {fileID: 0}
+  TorchLight: {fileID: 0}
 --- !u!54 &6388601551168423141
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -288,7 +296,7 @@ Transform:
   m_GameObject: {fileID: 2610117921035299286}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.431, y: 0, z: 0.876}
+  m_LocalPosition: {x: 0.466, y: 0, z: 1.13}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -446,6 +454,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FPSCam
   sensitivity: 2
+  camLock: 0
 --- !u!1001 &2738430580562533603
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -639,3 +648,5 @@ MonoBehaviour:
   torch: {fileID: 6753679150773365253}
   maxRange: 10
   maxburnTimer: 60
+  timer: 0
+  isDead: 0

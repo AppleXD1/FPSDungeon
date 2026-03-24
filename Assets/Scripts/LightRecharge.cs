@@ -9,7 +9,7 @@ public class LightRecharge : MonoBehaviour
     void Start()
     {
         isActive = true;
-        stationLight = GameObject.FindWithTag("StationLight").GetComponent<Light>();
+       
         playerTorch = GameObject.FindWithTag("Torch").GetComponent<TorchLight>();
     }
 

@@ -36,6 +36,7 @@ public class EnemyAI2 : MonoBehaviour
     public bool isStunned;
     public float stunTimmer;
     public Swords swords;
+    public FPSMovement speedMovement;
     public FPSBody body;
     public HitPlayer hitBox;
     public Animator animator;
@@ -52,7 +53,8 @@ public class EnemyAI2 : MonoBehaviour
         playerObj = GameObject.FindWithTag("Player");
         GameObject swordObj = GameObject.FindWithTag("Sword");
         swords = swordObj.GetComponent<Swords>();
-        hitBox = GameObject.FindWithTag("HitBox").GetComponent<HitPlayer>();
+        hitBox = GetComponentInChildren<HitPlayer>();
+        speedMovement = player.GetComponent<FPSMovement>();
 
     }
 
@@ -140,7 +142,15 @@ public class EnemyAI2 : MonoBehaviour
             Stunned();
         }
 
-
+        if(isAttack)
+        {
+            agent.isStopped = true;
+            RotateToPlayer(12f);
+        }
+        else
+        {
+            agent.isStopped = false;
+        }
 
 
     }
@@ -193,7 +203,7 @@ public class EnemyAI2 : MonoBehaviour
             agent.isStopped = true;
             animator.SetBool("isAttacking", true);
             hasDealtDamage = false;
-            StartCoroutine(DamagePlayer(0.5f)); 
+            StartCoroutine(DamagePlayer(0.8f)); 
         }
     }
 
@@ -266,16 +276,34 @@ public class EnemyAI2 : MonoBehaviour
 
     }
 
+    void RotateToPlayer(float rotateSpeed)
+    {
+        Vector3 direction = playerObj.transform.position - transform.position;
+        direction.y = 0f;
+
+        if (direction.sqrMagnitude < 0.001f) return;
+
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
+    }
+
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Sword"))
         {
-            if (body != null && body.isAttacking && !isStunned)
+            Swords hitSword = other.GetComponentInParent<Swords>();
+
+            if (body != null && body.isAttacking && !body.hasHit)
             {
+                body.hasHit = true;
                 isStunned = true;
-                swords.Durability--;
-                
+
+                if (hitSword != null)
+                {
+                    hitSword.Durability--;
+                    Debug.Log("Durability now: " + hitSword.Durability);
+                }
             }
         }
     }
@@ -298,14 +326,29 @@ public class EnemyAI2 : MonoBehaviour
     {
         yield return new WaitForSeconds(waitTime);
         AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-        
 
-        if (stateInfo.IsName("Punch") && hitBox.hitPlayer && !hasDealtDamage)
+
+        if (stateInfo.IsName("Punch"))
         {
-            Debug.Log("hit");
-            hasDealtDamage = true;
-            hitBox.hitPlayer = false;
-            body.Health--;
+            if (hitBox.hitPlayer)
+            {
+                if (!hasDealtDamage)
+                {
+                    hasDealtDamage = true;
+                    hitBox.hitPlayer = false;
+                    body.Health--;
+                    speedMovement.moveSpeed = 1.5f;
+                    yield return new WaitForSeconds(2.5f);
+                    speedMovement.moveSpeed = 0.75f;
+
+
+                }
+            }
+
+        }
+        else
+        {
+            hasDealtDamage = false;
         }
 
         animator.SetBool("isAttacking", false);

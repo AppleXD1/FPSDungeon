@@ -11,6 +11,8 @@ public class FPSBody : MonoBehaviour
     public GameObject equip;
     public bool gotKey;
     public bool lvlComplete;
+    public bool hasHit;
+    public bool isEquiped;
     public GameObject equippedSword;
     public bool isAttacking;
 
@@ -30,6 +32,7 @@ public class FPSBody : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        isEquiped = false;
         if (equippedSword != null && LeftClick.triggered && !isAttacking)
         {
             StartCoroutine(SwingAttack());
@@ -50,28 +53,21 @@ public class FPSBody : MonoBehaviour
             lvlComplete=true;
         }
 
-        if(other.gameObject.CompareTag("Sword"))
+        if(other.gameObject.CompareTag("Sword") && !isEquiped)
         {
             PickupSword(other.gameObject);
+            isEquiped = true;
         }
     }
 
     void PickupSword(GameObject sword)
     {
-        if (equippedSword != null)
-            return;
-
-        if (equip == null)
-        {
-            Debug.LogWarning("Equip is not assigned in Inspector!");
-            return;
-        }
 
         equippedSword = sword;
 
         sword.transform.SetParent(equip.transform);
-        sword.transform.localPosition = Vector3.zero;
-        sword.transform.localRotation = Quaternion.identity;
+        sword.transform.localPosition = new Vector3(0.2f, -0.15f, 0.35f);
+        sword.transform.localRotation = Quaternion.Euler(0f, 45f, 45f);
 
         Rigidbody rb = sword.GetComponent<Rigidbody>();
         if (rb != null)
@@ -94,6 +90,7 @@ public class FPSBody : MonoBehaviour
 
     IEnumerator SwingAttack()
     {
+        hasHit = false;
         isAttacking = true;
         animator.SetBool("isSwing", true);
         yield return new WaitForSeconds(0.5f);

@@ -3,23 +3,22 @@ using UnityEngine;
 public class HitPlayer : MonoBehaviour
 {
     public bool hitPlayer;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.CompareTag("Player"))
+        if (other.CompareTag("Player"))
         {
             hitPlayer = true;
+            Debug.Log("Player entered punch hitbox");
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            hitPlayer = false;
         }
     }
 }
+
