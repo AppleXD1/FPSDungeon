@@ -24,7 +24,7 @@ public class GameManger : MonoBehaviour
         cam = GameObject.FindWithTag("MainCamera").GetComponent<FPSCam>();
         torch = GameObject.FindWithTag("Torch").GetComponent<TorchLight>();
         DeathUI.SetActive(false);
-
+        Time.timeScale = 1f;
 
 
     }
